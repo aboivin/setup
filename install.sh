@@ -35,7 +35,9 @@ apt-get update
 apt-get -y install terminator git zsh wget rake curl
 
 # Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+if [ ! -d ~/.oh-my-zsh ]; then
+    sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
 
 # Cloning dotfiles
 if [ ! -d  $WORKSPACE/dotfiles ]; then
@@ -53,26 +55,26 @@ if [ ! -d  $SOFTWARE/z ]; then
 fi
 
 # Install intellij
-wget "https://download.jetbrains.com/product?code=IIU&latest&distribution=linux" $SOFTWARE/idea.tar.gz
+wget "https://download.jetbrains.com/product?code=IIU&latest&distribution=linux" -O $SOFTWARE/idea.tar.gz
 tar -xzvf $SOFTWARE/idea.tar.gz $SOFTWARE
+rm $SOFTWARE/idea.tar.gz
 
 
 # Installing docker
-apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+if hash docker 2>/dev/null; then
+    apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    apt-key fingerprint 0EBFCD88
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) \
+    stable"
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    apt-get update
 
-apt-key fingerprint 0EBFCD88
+    apt-get -y install docker-ce
 
-add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+    groupadd docker
 
-apt-get update
-
-apt-get -y install docker-ce
-
-groupadd docker
-
-usermod -aG docker $USER
+    usermod -aG docker $USER
+fi
