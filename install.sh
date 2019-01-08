@@ -70,6 +70,18 @@ if [ ! -d  $SOFTWARE/z ]; then
     echo ". ~/software/z/z.sh" >> ~/.zshrc.custom > /dev/null
 fi
 
+# Install conky
+if ! hash conky 2>/dev/null; then
+    apt-get install conky
+    if [ ! -d ~/.config]; then
+        mkdir ~/.config
+    fi
+    if [ ! -d ~/.config/autostart]; then
+        mkdir ~/.config/autostart
+    fi
+    ln -s $WORKSPACE/dotfiles/conky/conky.desktop ~/.config/autostart
+fi
+
 # Install intellij
 cd $SOFTWARE
     echo 'Installing Intellij Idea Ultimate...'
@@ -109,5 +121,19 @@ if ! hash docker 2>/dev/null; then
     groupadd docker > /dev/null
     usermod -aG docker $USER > /dev/null
 fi
+
+# Wallpaper setup
+echo 'Downloading wallpaper...'
+if [ ! -d ~/Pictures]; then
+    mkdir ~/Pictures
+fi
+wget -q https://images.pexels.com/photos/1146708/pexels-photo-1146708.jpeg?cs=srgb&dl=4k-wallpaper-agriculture-android-wallpaper-1146708.jpg&fm=jpg -O ~/Pictures/wallpaper.jpg
+if ! hash gsettings 2>/dev/null; then
+    gsettings set org.gnome.desktop.background picture-uri file://$HOME/Pictures/wallpaper.jpg
+fi
+
+# Keyboard setup
+echo 'Setting up keyboard...'
+xset r rate 200 25
 
 echo 'Done.'
