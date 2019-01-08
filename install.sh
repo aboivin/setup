@@ -3,6 +3,12 @@
 set -o nounset
 set -o errexit
 
+if [[ "$EUID" -ne 0 ]];
+then
+    echo "User must be root"
+    exit 1
+fi
+
 echo 
 echo "************************ SETUP *************************** "
 echo 
@@ -43,11 +49,11 @@ fi
 # Install oh-my-zsh
 if [ ! -d ~/.oh-my-zsh ]; then
     echo 'Installing oh-my-zsh...'
-    wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh  -O ~/omzsh.sh
+    wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O- | sed 's/env zsh -l//g'> ~/omzsh.sh
     ZSH=~/.oh-my-zsh
     chmod a+x ~/omzsh.sh
-    (sh -c ~/omzsh.sh && rm ~/omzsh.sh) &
-    sleep 5
+    source ~/omzsh.sh
+    rm ~/omzsh.sh
 fi
 
 # Cloning dotfiles
@@ -72,14 +78,15 @@ fi
 
 # Install conky
 if ! hash conky 2>/dev/null; then
-    apt-get install conky
-    if [ ! -d ~/.config]; then
+    apt-get -y install conky > /dev/null
+    if [ ! -d ~/.config ]; then
         mkdir ~/.config
     fi
-    if [ ! -d ~/.config/autostart]; then
+    if [ ! -d ~/.config/autostart ]; then
         mkdir ~/.config/autostart
     fi
-    ln -s $WORKSPACE/dotfiles/conky/conky.desktop ~/.config/autostart
+    ln -s $WORKSPACE/dotfiles/conky/conky.desktop ~/.config/autostart > /dev/null
+    conky&
 fi
 
 # Install intellij
@@ -124,16 +131,18 @@ fi
 
 # Wallpaper setup
 echo 'Downloading wallpaper...'
-if [ ! -d ~/Pictures]; then
+if [ ! -d ~/Pictures ]; then
     mkdir ~/Pictures
 fi
-wget -q https://images.pexels.com/photos/1146708/pexels-photo-1146708.jpeg?cs=srgb&dl=4k-wallpaper-agriculture-android-wallpaper-1146708.jpg&fm=jpg -O ~/Pictures/wallpaper.jpg
-if ! hash gsettings 2>/dev/null; then
+wget -q "https://images.pexels.com/photos/1146708/pexels-photo-1146708.jpeg?cs=srgb&dl=4k-wallpaper-agriculture-android-wallpaper-1146708.jpg&fm=jpg" -O ~/Pictures/wallpaper.jpg
+if hash gsettings 2>/dev/null; then
     gsettings set org.gnome.desktop.background picture-uri file://$HOME/Pictures/wallpaper.jpg
 fi
 
 # Keyboard setup
-echo 'Setting up keyboard...'
-xset r rate 200 25
+if hash xset 2>/dev/null; then
+    echo 'Setting up keyboard...'
+    xset r rate 200 25
+fi
 
 echo 'Done.'
