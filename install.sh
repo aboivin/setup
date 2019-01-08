@@ -34,8 +34,8 @@ echo 'Updating repositories...'
 apt-get update > /dev/null
 
 if ! hash curl 2>/dev/null; then
-    echo 'Installing zsh wget git rake curl default-jdk git terminator acpi...'
-    apt-get -y install zsh wget git rake curl terminator acpi > /dev/null
+    echo 'Installing zsh wget git rake curl terminator acpi...'
+    apt-get -y install apt-utils zsh wget git rake curl terminator acpi > /dev/null
     echo 'Installing default-jdk...'
     apt-get -y install default-jdk  > /dev/null
 fi
@@ -53,7 +53,7 @@ fi
 # Cloning dotfiles
 if [ ! -d  $WORKSPACE/dotfiles ]; then
     echo 'Cloning and installing dotfiles from github...'
-    git clone https://github.com/aboivin/dotfiles $WORKSPACE/dotfiles > /dev/null
+    git clone --quiet https://github.com/aboivin/dotfiles $WORKSPACE/dotfiles > /dev/null
     cd $WORKSPACE/dotfiles > /dev/null
     git remote remove origin > /dev/null
     git remote add origin git@github.com:aboivin/dotfiles.git > /dev/null
