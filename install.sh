@@ -52,7 +52,7 @@ if [ ! -d ~/.oh-my-zsh ]; then
     wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O- | sed 's/env zsh -l//g'> ~/omzsh.sh
     ZSH=~/.oh-my-zsh
     chmod a+x ~/omzsh.sh
-    source ~/omzsh.sh
+    source ~/omzsh.sh > /dev/null
     rm ~/omzsh.sh
 fi
 
@@ -78,7 +78,7 @@ fi
 
 # Install conky
 if ! hash conky 2>/dev/null; then
-    apt-get -y install conky > /dev/null
+    apt-get -y install conky-all > /dev/null
     if [ ! -d ~/.config ]; then
         mkdir ~/.config
     fi
