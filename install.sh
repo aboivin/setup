@@ -145,4 +145,12 @@ if hash xset 2>/dev/null; then
     xset r rate 200 25
 fi
 
+#Shortcut setup
+if hash gsettings 2>/dev/null; then
+   echo 'Setting up shortcuts...'
+   gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['']"
+   gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['']"
+   gsettings set org.gnome.desktop.wm.keybindings begin-move "['']"
+fi
+
 echo 'Done.'
