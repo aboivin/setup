@@ -40,8 +40,8 @@ echo 'Updating repositories...'
 apt-get update > /dev/null
 
 if ! hash curl 2>/dev/null; then
-    echo 'Installing zsh wget git rake curl terminator acpi...'
-    apt-get -y install apt-utils zsh wget git rake curl terminator acpi > /dev/null
+    echo 'Installing zsh wget git rake curl terminator acpi httpie...'
+    apt-get -y install apt-utils zsh wget git rake curl terminator acpi httpie > /dev/null
     echo 'Installing default-jdk...'
     apt-get -y install default-jdk  > /dev/null
 fi
