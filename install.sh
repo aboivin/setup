@@ -129,6 +129,11 @@ if ! hash docker 2>/dev/null; then
     usermod -aG docker $USER > /dev/null
 fi
 
+# Installing The fuck
+if ! hash fuck 2>/dev/null; then
+    apt install -y python3-dev python3-pip python3-setuptools
+    pip3 install thefuck
+
 # Wallpaper setup
 echo 'Downloading wallpaper...'
 if [ ! -d ~/Pictures ]; then
